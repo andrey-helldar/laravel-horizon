@@ -22,6 +22,7 @@ class HorizonServiceProvider extends ServiceProvider
         $this->registerEvents();
         $this->registerRoutes();
         $this->registerResources();
+        $this->registerJsonVariables();
         $this->defineAssetPublishing();
         $this->offerPublishing();
         $this->registerCommands();
@@ -68,6 +69,19 @@ class HorizonServiceProvider extends ServiceProvider
     protected function registerResources()
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'horizon');
+        $this->loadJsonTranslationsFrom(lang_path('vendor/horizon'));
+    }
+
+    /**
+     * Register the Horizon JSON variables.
+     *
+     * @return void
+     */
+    protected function registerJsonVariables()
+    {
+        Horizon::translations(
+            lang_path('vendor/horizon/'.app()->getLocale().'.json')
+        );
     }
 
     /**
@@ -97,6 +111,10 @@ class HorizonServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/horizon.php' => config_path('horizon.php'),
             ], 'horizon-config');
+
+            $this->publishes([
+                __DIR__.'/../lang' => lang_path('vendor/horizon'),
+            ], 'horizon-localization');
         }
     }
 
